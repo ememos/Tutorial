@@ -1,6 +1,4 @@
-Tutorial for Opensource Contibution Academy
+Tutorial for MemOS Project
 -------------------------------------------
 
-This repository is used to publish various example codes and documents for Opensource Contribution Academy.
-
- - MemOS Project
+This repository is used to publish various example codes and documents for MemOS project.
