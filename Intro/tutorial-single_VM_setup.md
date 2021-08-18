@@ -1,8 +1,8 @@
 # MemOS NUMA environment setting
 
-### Introdcution
+### Introduction
 Set up a NUMA node on a Single VM (QEMU) instance and emulate virtual NUMA environments at the guest level.
-- performanc level emulation is not supported.
+- performance-level emulation is not supported.
 - NUMA emulation that uses two virtual machine instances will be guided soon.
 
 ### Requirement
@@ -10,10 +10,10 @@ Set up a NUMA node on a Single VM (QEMU) instance and emulate virtual NUMA envir
 
 &ensp;&ensp;&ensp; or
 - Linux on the virtual machine (ex. virtualbox)
-  - Check nested virtualization is supported (virtualbox -> QEMU/KVM)
+  - Check if nested virtualization is supported (virtualbox -> QEMU/KVM)
   - ⚠️ No guarantee that it will work.
  
-### Recommandation
+### Recommendation
 - Ubuntu 18.04 LTS
 - Multicore CPU
 
@@ -23,8 +23,8 @@ Set up a NUMA node on a Single VM (QEMU) instance and emulate virtual NUMA envir
 ```bash
 sudo apt install qemu-kvm
 ```
-2. Download pre-built image that corresponding to your machine's architecure
-3. Rsize the image to 20G
+2. Download pre-built image corresponding to your machine's architecure
+3. Resize the image to 20G
 ```bash
 # Install Image
 wget http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img
