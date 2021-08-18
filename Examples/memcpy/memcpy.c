@@ -45,7 +45,11 @@ int prepare_memcpy(int threads, struct tdata **tdata) {
 	double duration;
 
 	/* prepare source */
+#ifdef NUMA
 	source = numa_alloc_onnode(count * sizeof(uint64_t), numa_node_of_cpu(0));
+#else
+	source = malloc(count * sizeof(uint64_t));
+#endif
 	if (source == NULL) {
 		perror("malloc");
 		return -1;
@@ -67,14 +71,14 @@ int prepare_memcpy(int threads, struct tdata **tdata) {
  * its own stack page, the source, and the destination, so it doesn't share writable memory
  * with any other thread, and does not call the kernel.
  */
-void *do_memcpy(void *argp)
+void *do_memcpy_numa(void *argp)
 {
 	struct tdata *tdata = (struct tdata *)argp;
 	uint64_t *destp;
 	uint64_t *srcp = source;
 	size_t size = count * sizeof(uint64_t);
 
-	cpu_pin(tdata->tid);
+	cpu_pin(tdata->tid % num_proc());
 	destp = numa_alloc_onnode(size, numa_node_of_cpu(tdata->tid));
 	if (destp == NULL) {
 		perror("malloc");
@@ -98,8 +102,42 @@ void *do_memcpy(void *argp)
 	return NULL;
 }
 
+void *do_memcpy(void *argp)
+{
+	struct tdata *tdata = (struct tdata *)argp;
+	uint64_t *destp;
+	uint64_t *srcp = source;
+	size_t size = count * sizeof(uint64_t);
+
+	cpu_pin(tdata->tid % num_proc());
+	destp = malloc(size);
+	if (destp == NULL) {
+		perror("malloc");
+		return (void *) -1;
+	} 
+#ifdef PREPOPULATE
+	else {
+		/* to confirm the actual memory allocation */
+		size_t i;
+		for (i = 0; i < count; i += (4096 / sizeof(uint64_t)))
+			destp[i] = 0;	
+	}
+#endif
+
+	roi_begin();
+	memcpy(destp, srcp, size);
+	roi_end();
+
+	free(destp);
+
+	return NULL;
+}
 int cleanup_memcpy(int threads, struct tdata **tdata) {
+#ifdef NUMA
 	numa_free(source, count * sizeof(uint64_t));
+#else
+	free(source);
+#endif
 	return 0;
 }
 
@@ -116,24 +154,37 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+#ifdef NUMA
 	cpu_pin(0);	
+#endif
 
 	init_benchmark(threads);
+#ifdef NUMA
 	tdata = init_tdata_numa();
+#else
+	tdata = init_tdata();
+#endif
 	if (!tdata) return -1;
 
 	if (prepare_memcpy(threads, tdata))
 		return -1;
 											       
 	fprintf(stderr, "Starting %lu threads\n", threads);
+#ifdef NUMA
+	duration = run_threads(tdata, do_memcpy_numa);
+#else
 	duration = run_threads(tdata, do_memcpy);
+#endif
 	fprintf(stderr, "Threads stopped\n\n");
 	fprintf(stderr, "Copied source in %lu threads in %f sec.\n", threads,duration);
 	fprintf(stderr, "Achieving parallel memory read-write bandwidth: %f GB/sec.\n", (count * sizeof(uint64_t) / duration / 1e9) * threads * 2.0);
 
 	cleanup_memcpy(threads, tdata);
-
+#ifdef NUMA
 	free_tdata_numa(tdata);
+#else
+	free_tdata(tdata);
+#endif
 	
 	print_result(BENCH_NAME, threads, duration, count);
 

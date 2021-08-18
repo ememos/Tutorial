@@ -1,0 +1,40 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CC	Makefile	/^CC    	= g++ -fopenmp$/;"	m
+CCFLAGS	Makefile	/^CCFLAGS = $/;"	m
+CSRComplex	csr_complex.cpp	/^CSRComplex::CSRComplex(int *CSR_rowPtr, int *CSR_colIndex, double* CSR_nnz_R, double* CSR_nnz_I, int CSR_globalNgrid, int CSR_localNgrid, int CSR_Nnonzero, int CSR_localFirstrow)$/;"	f	class:CSRComplex
+CSRComplex	csr_complex.hpp	/^class CSRComplex$/;"	c
+MAX_ROI	practice.cpp	14;"	d	file:
+MAX_ROI	utils.cpp	10;"	d	file:
+MAX_THREADS	utils.cpp	9;"	d	file:
+MONITORING	practice.cpp	7;"	d	file:
+MONITORING	utils.cpp	3;"	d	file:
+MONITORING	utils.hpp	14;"	d
+Nnnz	csr_complex.hpp	/^		int Nnnz;$/;"	m	class:CSRComplex
+OBJS	Makefile	/^OBJS 	= csr_complex.o utils.o practice.o$/;"	m
+_CSR_COMPLEX_HPP_	csr_complex.hpp	2;"	d
+_UTILS	utils.hpp	2;"	d
+convert	utils.cpp	/^void convert(double *dmatrix_R, double *dmatrix_I, int *index_i, int *index_j, double *nz_R, double *nz_I, int DIM)$/;"	f
+dmv	utils.cpp	/^void dmv(double *dmatrix_R, double *dmatrix_I, double *xR, double *xI, double *yR, double *yI, int DIM, int roi_num)$/;"	f
+dumpCSR	csr_complex.cpp	/^void CSRComplex::dumpCSR(char *filename) $/;"	f	class:CSRComplex
+dump_dmatrix	utils.cpp	/^void dump_dmatrix(double *dmatrix_R, double *dmatrix_I, int DIM, char* filename)$/;"	f
+findx	csr_complex.hpp	/^		int findx;$/;"	m	class:CSRComplex
+globalSize	csr_complex.hpp	/^		int globalSize;$/;"	m	class:CSRComplex
+index_i	csr_complex.hpp	/^		int *index_i;$/;"	m	class:CSRComplex
+index_j	csr_complex.hpp	/^		int *index_j;$/;"	m	class:CSRComplex
+load	utils.cpp	/^void load(int *index_i, int* index_j, double *nz_R, double *nz_I, char* file_i, char* file_j, char *file_n)$/;"	f
+localSize	csr_complex.hpp	/^		int localSize;$/;"	m	class:CSRComplex
+localfirstrow	csr_complex.hpp	/^		int localfirstrow;$/;"	m	class:CSRComplex
+main	practice.cpp	/^int main(int argc, char **argv) {$/;"	f
+monitoring_beg	practice.cpp	/^struct timeval monitoring_beg[MAX_ROI];$/;"	v	typeref:struct:timeval
+monitoring_end	practice.cpp	/^struct timeval monitoring_end[MAX_ROI];$/;"	v	typeref:struct:timeval
+nnz_I	csr_complex.hpp	/^		double* nnz_I;$/;"	m	class:CSRComplex
+nnz_R	csr_complex.hpp	/^		double* nnz_R;$/;"	m	class:CSRComplex
+roi_num	practice.cpp	/^int roi_num = 0;$/;"	v
+spmv	utils.cpp	/^void spmv(CSRComplex *A, double *xR, double *xI, double *yR, double *yI, int roi_num)$/;"	f
+timeval_subtract	practice.cpp	/^static void timeval_subtract (struct timeval *x, struct timeval *s)$/;"	f	file:
+~CSRComplex	csr_complex.cpp	/^CSRComplex::~CSRComplex()$/;"	f	class:CSRComplex
