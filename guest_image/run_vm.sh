@@ -8,7 +8,7 @@ NR_CPU=$(grep ^cpu\\scores /proc/cpuinfo | uniq |  awk '{print $4}')
 
 # Default MEM_SIZE is half of total memory(MB).
 MEM_SIZE=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-MEM_SZIE=$(( MEM_SIZE/2048 ))
+MEM_SIZE=$(( MEM_SIZE/2048 ))
 GUI_MODE=false
 
 function usage
