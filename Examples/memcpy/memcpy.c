@@ -79,7 +79,7 @@ void *do_memcpy_numa(void *argp)
 	size_t size = count * sizeof(uint64_t);
 
 	cpu_pin(tdata->tid % num_proc());
-	destp = numa_alloc_onnode(size, numa_node_of_cpu(tdata->tid));
+	destp = numa_alloc_onnode(size, numa_node_of_cpu(tdata->tid % num_proc()));
 	if (destp == NULL) {
 		perror("malloc");
 		return (void *) -1;
@@ -109,7 +109,7 @@ void *do_memcpy(void *argp)
 	uint64_t *srcp = source;
 	size_t size = count * sizeof(uint64_t);
 
-	cpu_pin(tdata->tid % num_proc());
+	//cpu_pin(tdata->tid % num_proc());
 	destp = malloc(size);
 	if (destp == NULL) {
 		perror("malloc");

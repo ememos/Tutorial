@@ -114,12 +114,10 @@ static inline struct tdata **init_tdata_numa() {
 
 	for (i = 0; i < benchmark.threads; ++i) {
 		core_id = i % num_proc();
-		//node = numa_node_of_cpu(i);
 		node = numa_node_of_cpu(core_id);
 		ret[i] = (struct tdata *) numa_alloc_onnode(sizeof(struct tdata), node);
 		if (!ret[i]) goto error;
-		//ret[i]->tid = i;
-		ret[i]->tid = i % num_proc();
+		ret[i]->tid = i;
 		ret[i]->data = NULL;
 	}
 
