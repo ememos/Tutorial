@@ -4,12 +4,15 @@ VM_IMAGE="bionic-server-cloudimg-amd64.img"
 PW_IMAGE="user-data.img"
 
 # Default NR_CPU is number of physical cpu
-NR_CPU=$(grep ^cpu\\scores /proc/cpuinfo | uniq |  awk '{print $4}')
+NR_CPU=$(expr `nproc` / 2)
 
 # Default MEM_SIZE is half of total memory(MB).
 MEM_SIZE=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 MEM_SIZE=$(( MEM_SIZE/2048 ))
 GUI_MODE=false
+NUMA_MODE=false
+START_VCPU="0"
+IPLIST="10.10.20.14 10.10.20.16"
 
 function usage
 {
@@ -17,8 +20,11 @@ function usage
     echo "   ";
     echo "  -v | --vm_image          : Disk image used for booting";
     echo "  -c | --cpu_nr            : Number of vCPUs";
+    echo "  -n | --numa              : Using NUMA mode";
     echo "  -m | --mem_size          : VM's total memory size";
     echo "  -g | --gui_mode          : Using this option makes gui mode. Without this, it will be cli";
+    echo "  -s | --start             : Start number of vCPU, range between -local-cpu";
+    echo "  -i | --iplist            : IP list connected between nodes";
     echo "  -h | --help              : Show usage";
 }
 
@@ -26,12 +32,14 @@ function parse_args
 {
   # named args
   while [ "$1" != "" ]; do
-      echo "$1"
       case "$1" in
           -v | --vm_image )             VM_IMAGE="$2";           shift;;
           -c | --cpu_nr   )             NR_CPU="$2";             shift;;
+          -n | --numa     )             NUMA_MODE=true;          shift;;
           -m | --mem_size )             MEM_SIZE="$2";           shift;;
           -g | --gui_mode )             GUI_MODE=true;           shift;;
+          -s | --start    )             START_VCPU="$2";         shift;;
+          -i | --iplist   )             IPLIST="$2";             shift;;
           -h | --help )                 usage;                   exit;;
       esac
       shift # move to next kv pair
@@ -52,12 +60,24 @@ if [ "$GUI_MODE" = false ]; then
 fi
 COMMAND+="-monitor telnet:127.0.0.1:1234,server,nowait "
 
-COMMAND+="-object memory-backend-ram,size=$NODE_SIZE,id=ram0 "
-COMMAND+="-numa node,nodeid=0,cpus=0-$((NR_CPU/2 - 1)),memdev=ram0 "
-COMMAND+="-object memory-backend-ram,size=$NODE_SIZE,id=ram1 "
-COMMAND+="-numa node,nodeid=1,cpus=$((NR_CPU/2))-$((NR_CPU-1)),memdev=ram1 "
+if [ "$NUMA_MODE" = true ]; then
+    COMMAND+="-object memory-backend-ram,size=$NODE_SIZE,id=ram0 "
+    COMMAND+="-numa node,nodeid=0,cpus=0-$((NR_CPU/2 - 1)),memdev=ram0 "
+    COMMAND+="-object memory-backend-ram,size=$NODE_SIZE,id=ram1 "
+    COMMAND+="-numa node,nodeid=1,cpus=$((NR_CPU/2))-$((NR_CPU-1)),memdev=ram1 "
 
-COMMAND+="-device e1000,netdev=net0 "
-COMMAND+="-netdev user,id=net0,hostfwd=tcp::5556-:22 "
+    COMMAND+="-device e1000,netdev=net0 "
+    COMMAND+="-netdev user,id=net0,hostfwd=tcp::5556-:22 "
 
-$COMMAND
+    sudo $COMMAND
+else
+    if [ "$START_VCPU" == "0" ]; then
+        COMMAND+="-redir tcp:5556::22 "
+    fi
+    #FIXME workaround
+    sudo $COMMAND -local-cpu $((NR_CPU/2)),start=${START_VCPU},iplist="${IPLIST}"
+fi
+
+# debug
+#echo $COMMAND
+#sudo $COMMAND
