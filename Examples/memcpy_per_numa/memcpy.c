@@ -88,13 +88,13 @@ void *do_memcpy_numa(void *argp)
 	uint64_t *srcp = NULL;
 	size_t size = count * sizeof(uint64_t);
 
-	//속하는 numa node에 따라 source memory를 달리 함
+	
 	if((tdata->tid % num_proc())%2==0)
 		srcp = source1;
 	else
 		srcp = source2;
 		
-	cpu_pin(tdata->tid % num_proc()); //쓰레드id에 따라 cpu pinning
+	cpu_pin(tdata->tid % num_proc()); 
 	destp = numa_alloc_onnode(size, numa_node_of_cpu(tdata->tid % num_proc()));
 	if (destp == NULL) {
 		perror("malloc");
