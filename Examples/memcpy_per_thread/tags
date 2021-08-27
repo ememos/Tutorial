@@ -1,0 +1,49 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BENCH_NAME	memcpy.c	21;"	d	file:
+BENCH_NAME	memcpy.c	23;"	d	file:
+CFLAGS	Makefile	/^CFLAGS=-O3 -lpthread -g -Wall -pthread -fno-builtin$/;"	m
+_GNU_SOURCE	memcpy.c	6;"	d	file:
+__COMMON_H__	common.h	2;"	d
+barriers	common.h	/^	pthread_barrier_t barriers[4]; \/* two for begin, two for end *\/$/;"	m	struct:benchmark
+beg	common.h	/^	struct timespec beg, end;$/;"	m	struct:benchmark	typeref:struct:benchmark::timespec
+benchmark	common.h	/^struct benchmark {$/;"	s
+benchmark	common.h	/^} benchmark = {0, 0, NULL, NULL, };$/;"	v	typeref:struct:benchmark
+cleanup_memcpy	memcpy.c	/^int cleanup_memcpy(int threads, struct tdata **tdata) {$/;"	f
+cmd_roi_after	common.h	/^	char *cmd_roi_after;$/;"	m	struct:benchmark
+cmd_roi_before	common.h	/^	char *cmd_roi_before;$/;"	m	struct:benchmark
+count	memcpy.c	/^static uint64_t count = 1 << 29; \/\/ default: 4 GB$/;"	v	file:
+cpu_pin	common.h	/^static inline int cpu_pin(int cpu) {$/;"	f
+data	common.h	/^	void *data;$/;"	m	struct:tdata
+do_memcpy	memcpy.c	/^void *do_memcpy(void *argp)$/;"	f
+do_memcpy_numa	memcpy.c	/^void *do_memcpy_numa(void *argp)$/;"	f
+end	common.h	/^	struct timespec beg, end;$/;"	m	struct:benchmark	typeref:struct:benchmark::
+fill_lehmer64	memcpy.c	/^static void fill_lehmer64(uint64_t *vec, size_t nelem, uint64_t seed)$/;"	f	file:
+free_tdata	common.h	/^static inline void free_tdata(struct tdata **tdata) {$/;"	f
+free_tdata_numa	common.h	/^static inline void free_tdata_numa(struct tdata **tdata) {$/;"	f
+g_lehmer64_state	memcpy.c	/^static __uint128_t g_lehmer64_state;$/;"	v	file:
+get_duration	common.h	13;"	d
+get_time	common.h	12;"	d
+init	common.h	/^	int init;$/;"	m	struct:benchmark
+init_benchmark	common.h	/^static inline int init_benchmark(int threads) {$/;"	f
+init_tdata	common.h	/^static inline struct tdata **init_tdata() {$/;"	f
+init_tdata_numa	common.h	/^static inline struct tdata **init_tdata_numa() {$/;"	f
+lehmer64	memcpy.c	/^static inline uint64_t lehmer64(void) {$/;"	f	file:
+main	memcpy.c	/^int main(int argc, char *argv[])$/;"	f
+num_proc	common.h	/^static inline int num_proc() {$/;"	f
+parse_option	common.h	/^static inline int parse_option(int argc, char **argv, uint64_t *threads_ptr, uint64_t *count_ptr) {$/;"	f
+prepare_memcpy	memcpy.c	/^int prepare_memcpy(int threads, struct tdata **tdata) {$/;"	f
+print_result	common.h	/^static inline void print_result(const char *name, uint64_t threads, double time, uint64_t arg) {$/;"	f
+roi_begin	common.h	/^static inline void roi_begin() {$/;"	f
+roi_begin_main	common.h	/^static inline void roi_begin_main() {$/;"	f
+roi_end	common.h	/^static inline void roi_end() {$/;"	f
+roi_end_main	common.h	/^static inline void roi_end_main() {$/;"	f
+run_threads	common.h	/^static inline double run_threads(struct tdata **tdata, void *(*func) (void *argp)) {$/;"	f
+source	memcpy.c	/^static uint64_t *source;$/;"	v	file:
+tdata	common.h	/^struct tdata {$/;"	s
+threads	common.h	/^	int threads;$/;"	m	struct:benchmark
+tid	common.h	/^	int tid;$/;"	m	struct:tdata
