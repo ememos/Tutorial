@@ -18,7 +18,7 @@ struct benchmark {
 	int threads;
 	char *cmd_roi_before;
 	char *cmd_roi_after;
-	pthread_barrier_t barriers[4]; /* two for begin, two for end */
+	pthread_barrier_t barriers[8]; /* two for begin, two for end */
 	struct timespec beg, end;
 } benchmark = {0, 0, NULL, NULL, };
 
@@ -80,7 +80,7 @@ static inline int init_benchmark(int threads) {
 	int ret;
 
 	benchmark.threads = threads;
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 8; i++) {
 		ret = pthread_barrier_init(&benchmark.barriers[i], NULL, threads + 1);
 		if (ret) {
 			fprintf(stderr, "failed to init barriers\n");
@@ -218,6 +218,7 @@ static inline void roi_end_main() {
 	pthread_barrier_wait(&benchmark.barriers[3]);
 }
 
+
 static inline void roi_begin() {
 	pthread_barrier_wait(&benchmark.barriers[0]);
 	pthread_barrier_wait(&benchmark.barriers[1]);
@@ -227,6 +228,17 @@ static inline void roi_end() {
 	pthread_barrier_wait(&benchmark.barriers[2]);
 	sleep(1); /* do not disturb get_time of main thread */
 	pthread_barrier_wait(&benchmark.barriers[3]);
+}
+
+static inline void roi_begin_src(){
+	pthread_barrier_wait(&benchmark.barriers[4]);
+	pthread_barrier_wait(&benchmark.barriers[5]);
+}
+
+static inline void roi_end_src(){
+	pthread_barrier_wait(&benchmark.barriers[6]);
+	sleep(1);
+	pthread_barrier_wait(&benchmark.barriers[7]);
 }
 
 static inline int cpu_pin(int cpu) {
@@ -245,7 +257,12 @@ static inline double run_threads(struct tdata **tdata, void *(*func) (void *argp
 	pthread_t thread_id[threads];
 	int i;
 	int err;
-	
+#ifdef THREAD
+	int duration;
+	struct timespec beg_src, end_src;
+	uint64_t count = 1 << 29;
+#endif
+
 	for (i = 0; i < threads; i++) {
 		err = pthread_create(&thread_id[i], NULL, func, (void *) tdata[i]);
 		if (err) {
@@ -253,7 +270,19 @@ static inline double run_threads(struct tdata **tdata, void *(*func) (void *argp
 			exit(1);
 		}
 	}
+#ifdef THREAD
 	fprintf(stderr, "Starting %lu threads\n\n", threads);
+	pthread_barrier_wait(&benchmark.barriers[4]);
+	get_time(beg_src);
+	pthread_barrier_wait(&benchmark.barriers[5]);
+	pthread_barrier_wait(&benchmark.barriers[6]);
+	get_time(end_src);
+	pthread_barrier_wait(&benchmark.barriers[7]);
+	duration = get_duration(beg_src,end_src);
+
+	fprintf(stderr, "Random source %'lu bytes is initialized to every thread in %f sec.\n", count * sizeof(uint64_t), duration);
+	fprintf(stderr, "Source generation rate %f GB/sec.\n\n", (count * sizeof(uint64_t) / duration / 1e9));
+#endif
 
 	roi_begin_main();
 
