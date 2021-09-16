@@ -65,7 +65,8 @@ if [ "$NUMA_MODE" = true ]; then
     COMMAND+="-numa node,nodeid=0,cpus=0-$((NR_CPU/2 - 1)),memdev=ram0 "
     COMMAND+="-object memory-backend-ram,size=$NODE_SIZE,id=ram1 "
     COMMAND+="-numa node,nodeid=1,cpus=$((NR_CPU/2))-$((NR_CPU-1)),memdev=ram1 "
-
+    
+    COMMAND+="-vcpu pin-all=on "
     COMMAND+="-device e1000,netdev=net0 "
     COMMAND+="-netdev user,id=net0,hostfwd=tcp::5556-:22 "
 
