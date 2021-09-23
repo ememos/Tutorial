@@ -50,7 +50,7 @@ int prepare_memcpy(int threads, struct tdata **tdata) {
 #ifdef NUMA
 	source = numa_alloc_onnode(count * sizeof(uint64_t), numa_node_of_cpu(0));
 	#ifdef PERNODE
-	source2 = numa_alloc_onnode(count * sizeof(uint64_t), 1);
+	source2 = numa_alloc_onnode(count * sizeof(uint64_t), numa_node_of_cpu(num_proc()-1));
 	if(source2 == NULL){
 		perror("malloc");
 		return -1;
@@ -116,7 +116,7 @@ void *do_memcpy_numa(void *argp)
 #endif
 
 #ifdef PERNODE
-	if((tdata->tid %2)==0)
+	if(tdata->tid <= (num_proc()/2))
 		srcp = source;
 	else
 		srcp = source2;
