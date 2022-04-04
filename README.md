@@ -1,4 +1,4 @@
-Tutorial for MemOS Project
+Tutorial for MEMOS Project
 -------------------------------------------
 
-This repository is used to publish various example codes and documents for MemOS project.
+This repository is used to publish various example codes and documents for MEMOS project.
